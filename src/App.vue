@@ -1,25 +1,31 @@
 <template>
   <section class="todo-list">
                 
-      <h3>To-do List</h3>
+      <h3>VueDoList</h3>
       
       <div class="all-todos" v-if="items">
-          <div>
-              <p>ToDo 1</p>
+          <div
+            v-for="(item, index) in items"
+            :key="index"
+            class="single-todo"
+            :class="{ done : item.crossed }"
+            @click="item.crossed = !item.crossed"
+          >
+              <p>{{ item.text }}</p>
           </div>
       </div>
 
-      <button v-if="items.length" class="clear" @click="items=[]">Clear All</button>
+      <button v-if="items.length" class="clear" @click="items=[]">Alles löschen</button>
 
-      <input type="text" placeholder="Add new to-do" v-model="newItem.text">
-      <button class="add" @click="addItem()">Add</button>
+      <input type="text" placeholder="Neues To-Do hinzufügen" v-model="newItem.text">
+      <button class="add" @click="addItem()">Hinzufügen</button>
 
       <div class="instructions">
-          Instructions:
+          Anleitung:
           <ul>
-              <li>Click the to-do text to toggle between done / undone</li>
-              <li>Use clear all button to remove all items</li>
-              <li>Use the input field to add new to-dos</li>
+            <li>Klicke auf den zu erledigenden Text, um zwischen erledigt / nicht erledigt zu wechseln</li>
+            <li>Verwende die Schaltfläche "Alles löschen", um alle Elemente zu entfernen</li>
+            <li>Verwende das Eingabefeld, um neue Aufgaben hinzuzufügen</li>
           </ul>
       </div>
   </section>
@@ -51,6 +57,12 @@ export default {
           alert("Field must be filled")
       }
     }
+  },
+  created() {
+    this.items = localStorage.getItem("items") ? JSON.parse(localStorage.getItem("items")) : this.items;
+  },
+  updated() {
+    localStorage.setItem("items", JSON.stringify(this.items));
   }
 }
 
@@ -144,7 +156,7 @@ export default {
       width: 12px;
       height: 12px;
       border: none;
-      /*background: transparent url('img/remove.png') no-repeat center;*/
+      /*background: transparent url('https://unpkg.com/vue@3/dist/img/remove.png') no-repeat center;*/
       background-size: contain;
       cursor: pointer;
       margin-left: 8px;
